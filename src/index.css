@@ -1,0 +1,11 @@
+:root {
+  font-size: 20px;
+  --body-bg-color: #e0dddd;
+}
+
+body { 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  background-color: var(--body-bg-color);
+}
