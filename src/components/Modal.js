@@ -55,8 +55,6 @@ export const Modal = ({ title, onClose }) => {
           <TextArea 
             id="body"
             name="body"
-            rows={20}
-            columns={46}
             title="Body"
           />
         </div>
@@ -69,6 +67,8 @@ export const Modal = ({ title, onClose }) => {
             text-align: center;
           `}
         >
+          
+          <Button onClick={onClose} text="Create" />
           <Button onClick={onClose} text="Close" />
         </div>
       </div>

@@ -32,6 +32,8 @@ export const TextArea = ({
         className={css`
           font-size: 20px;
           padding: 4px 6px;
+          resize: none;
+          width: calc(100% - 20px);
         `}
       ></textarea>
     </fieldset>
