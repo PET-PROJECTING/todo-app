@@ -1,13 +1,15 @@
-import { Header,  Content } from "./components";
+import React, { Fragment } from "react";
+import { 
+  Header,
+  Content
+} from "./components";
 
 function App() {
   return (
-    <>
-      <Header 
-        title={"TODO APP"}
-      />
+    <Fragment>
+      <Header>TODO APP</Header>
       <Content />
-    </>
+    </Fragment>
   );
 }
 

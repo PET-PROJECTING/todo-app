@@ -1,19 +1,30 @@
+import { useState, useContext } from "react";
 import { css } from "@emotion/css";
-import { ListItem, Button, Modal } from ".";
-import { useState } from "react";
-import { OpenModalContext } from "../contexts";
+import { 
+  ListItem,
+  Button,
+  Modal
+} from ".";
+import { 
+  OpenModalContext,
+  ItemsContext
+} from "../contexts";
+import PropTypes from "prop-types";
 
-export const List = ({ items, onClick }) => {
-  const [openModal, setOpenModal] = useState(false);
+export const List = ({ handleClick, setOpenModal }) => {
+  const items = useContext(ItemsContext);
 
-  const handleClick = (e) => {
-    onClick(e.currentTarget.id);
-  }
-
-  const mapItemsToListItems = items.map((item) => <ListItem key={item.id} item={item} onClick={handleClick} />);
+  const listItems = items.map((item) => {
+    return (
+      <ListItem
+        key={item.id}
+        item={item}
+        onClick={(e) => handleClick(e.currentTarget.id)}
+      />
+    );
+  });
   
   return (
-    <OpenModalContext.Provider value={openModal} >
       <div
         className={css`
           width: 30%;
@@ -21,17 +32,24 @@ export const List = ({ items, onClick }) => {
         `}
       >
         <Button 
-          text="Add new" 
           onClick={() => setOpenModal(true)}
           style={{
             width: "calc(100% - 6px)",
             minHeight: "60px",
             margin: ".1em .2em .2em",
           }}
-        />
-        {mapItemsToListItems}
-        <Modal onClose={() => setOpenModal(false)} title="Add new TODO item"/>
+        >
+          Add new
+        </Button>
+        {listItems}
       </div>
-    </OpenModalContext.Provider>
   );
+};
+
+List.displayName = "List";
+
+List.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  handleCreate: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };

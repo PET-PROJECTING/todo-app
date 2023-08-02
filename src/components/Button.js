@@ -3,17 +3,17 @@ import PropTypes from "prop-types";
 import { css } from "@emotion/css";
 import { styles } from ".";
 
-export const Button = ({ text, onClick, ...props }) => {
+export const Button = ({ children, onClick, type = "button", ...props }) => {
   return (
     <button
-      onClick={onClick}
       className={css`
-        font-size: .8rem;
         padding: .4em 2em;
-        border: 2px solid ${styles.MAIN_COLOR};
-        background-color: ${styles.MAIN_BG_COLOR};
+        font-size: .8rem;
         color: ${styles.MAIN_COLOR};
+        background-color: ${styles.MAIN_BG_COLOR};
+        border: 2px solid ${styles.MAIN_COLOR};
         border-radius: 10px;
+    
         &:hover {
           background: rgb(2, 0, 36);
           background: linear-gradient(
@@ -23,9 +23,11 @@ export const Button = ({ text, onClick, ...props }) => {
           );
         }
       `}
+      type={type}
+      onClick={onClick}
       {...props}
     >
-      {text}
+      {children}
     </button>
   );
 };
@@ -33,6 +35,7 @@ export const Button = ({ text, onClick, ...props }) => {
 Button.displayName = "Button";
 
 Button.propTypes = {
-  text: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  children: PropTypes.string,
+  onClick: PropTypes.func,
+  type: PropTypes.string,
 };

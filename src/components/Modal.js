@@ -1,17 +1,26 @@
 import { css } from "@emotion/css";
+import { Formik, Form } from 'formik';
 import { useContext } from "react";
-import { OpenModalContext } from "../contexts";
-import { styles, FieldInput, Button, TextArea } from ".";
+import { OpenModalContext, ToastrContext } from "../contexts";
+import {
+  FieldInput,
+  Button,
+  TextArea,
+  FormikHelper,
+  styles,
+} from ".";
+import { ItemGenerator } from "../utilities";
+import validationSchema from "./validationSchema";
+import { FIELDS } from "../constants";
 
-export const Modal = ({ title, onClose }) => {
+export const Modal = ({ children, onClose, handleCreate }) => {
   const isOpen = useContext(OpenModalContext);
+  const toastr = useContext(ToastrContext);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className={css`
         position: fixed;
         left: 0;
@@ -26,7 +35,7 @@ export const Modal = ({ title, onClose }) => {
       `}
       onClick={onClose}
     >
-      <div 
+      <div
         className={css`
           width: 40vw;
           height: 70vh;
@@ -40,38 +49,61 @@ export const Modal = ({ title, onClose }) => {
         `}
         onClick={(e) => e.stopPropagation()}
       >
-        <div 
+        <div
           className={css`
             text-align: center;
             padding-bottom: 10px;
             margin-bottom: 20px;
-            border-bottom: 2px solid ${styles.MAIN_BG_COLOR}
+            border-bottom: 2px solid ${styles.MAIN_BG_COLOR};
           `}
         >
-          <span>{title}</span>
+          <span>{children}</span>
         </div>
-        <div>
-          <FieldInput label="Title" text={"title"} />
-          <TextArea 
-            id="body"
-            name="body"
-            title="Body"
-          />
-        </div>
-        <div
-          className={css`
-            position: absolute;
-            bottom: 20px;
-            width: 80%;
-            left: 10%;
-            text-align: center;
-          `}
-        >
-          
-          <Button onClick={onClose} text="Create" />
-          <Button onClick={onClose} text="Close" />
-        </div>
+        <Formik
+          initialValues={{
+            body: "",
+            title: "",
+          }}
+          onSubmit={(formData) => {
+            handleCreate(new ItemGenerator(formData.title, formData.body));
+            onClose();
+            toastr.call({ children: "TODO Item was added!"})
+          }}
+          validationSchema={validationSchema}
+
+        >{({ errors, touched }) => (
+          <Form>
+            <FormikHelper>
+              <div>
+                <FieldInput
+                  label="Title"
+                  placeholder="Enter your title"
+                  name={FIELDS.TITLE_FIELD}
+                />
+                <TextArea
+                  id="body"
+                  name={FIELDS.BODY_FIELD}
+                  title="Body"
+                />
+              </div>
+              <div
+                className={css`
+                  position: absolute;
+                  bottom: 20px;
+                  width: 80%;
+                  left: 10%;
+                  text-align: center;
+                `}
+              >
+                <Button type="submit">Create</Button>
+                <Button onClick={onClose}>Close</Button>
+              </div>
+              {/*{!isEmpty(errors) && toastr.call()}*/  /* TODO: Fix infinity loop */}
+            </FormikHelper>
+          </Form>
+          )}
+        </Formik>
       </div>
     </div>
-  )
+  );
 };

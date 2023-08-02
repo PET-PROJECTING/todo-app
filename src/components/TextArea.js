@@ -1,14 +1,21 @@
 import { css } from "@emotion/css";
 import { styles } from ".";
+import { Field } from "formik";
+import {useContext} from "react";
+import {FormikValidationContext} from "../contexts";
 
 export const TextArea = ({
   title,
   id,
   name,
   columns = 20,
-  rows = 20,
+  rows = 13,
   placeholder = "Insert your text here",
 }) => {
+
+  const fieldHelpers = useContext(FormikValidationContext);
+  const fieldHelper = fieldHelpers[name];
+
   return (
     <fieldset
       className={css`
@@ -23,7 +30,8 @@ export const TextArea = ({
       >
         {title}
       </legend>
-      <textarea
+      <Field
+        as="textarea"
         id={id}
         name={name}
         rows={rows}
@@ -34,8 +42,10 @@ export const TextArea = ({
           padding: 4px 6px;
           resize: none;
           width: calc(100% - 20px);
+          ${fieldHelper.isValidationFailed && fieldHelper.failingStyles}
         `}
-      ></textarea>
+      ></Field>
+      {fieldHelper.isValidationFailed && fieldHelper.renderErrorMessage()}
     </fieldset>
   );
 };
